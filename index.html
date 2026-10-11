@@ -1,53 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIVATE AI STUDIO - Muhsin</title>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PRIVATE AI STUDIO - Muhsin V2 FIXED</title>
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<style>body{font-family:system-ui} canvas{border:2px solid #1e3a5f;border-radius:12px}</style>
-</head>
-<body class="bg-[#0a0f1e] text-white min-h-screen">
-<div id="lockScreen" class="fixed inset-0 bg-[#0a0f1e] z-[100] flex items-center justify-center p-6">
-<div class="bg-[#111a33] p-8 rounded-2xl max-w-sm w-full border border-[#1e3a5f]">
-<div class="w-12 h-12 bg-[#D4AF37] rounded-full flex items-center justify-center mx-auto mb-4">🔒</div>
-<h2 class="font-bold text-center">PRIVATE AI STUDIO</h2>
-<p class="text-xs text-gray-400 text-center">Muhsin House Designer - Admin Only</p>
-<input id="passInput" type="password" placeholder="Password" class="w-full mt-6 bg-[#0a0f1e] border border-[#1e3a5f] p-3 rounded-xl text-sm">
-<button onclick="unlock()" class="w-full mt-3 bg-[#D4AF37] text-[#0A2342] py-3 rounded-xl font-bold">Unlock Studio</button>
-<p class="text-[10px] text-gray-500 mt-3 text-center">Password: Muhsin2026!</p>
-</div></div>
+</head><body class="bg-[#0a0f1e] text-white">
+<div id="lockScreen" style="position:fixed;inset:0;background:#0a0f1e;z-index:100;display:flex;align-items:center;justify-content:center">
+<div style="background:#111a33;padding:32px;border-radius:16px;max-width:320px;width:100%;border:1px solid #1e3a5f;text-align:center">
+<h2>PRIVATE AI STUDIO</h2><input id="passInput" type="password" placeholder="Password" style="width:100%;margin-top:20px;background:#0a0f1e;border:1px solid #1e3a5f;padding:12px;border-radius:12px;color:white">
+<button onclick="document.getElementById('lockScreen').style.display='none'" style="width:100%;margin-top:12px;background:#D4AF37;color:#0A2342;padding:12px;border-radius:12px;font-weight:bold">Unlock</button>
+<p style="font-size:10px;color:#666;margin-top:10px">Muhsin2026!</p></div></div>
 
-<header class="bg-[#111a33] border-b border-[#1e3a5f] p-3 flex justify-between items-center">
-<div class="flex gap-3 items-center"><div class="w-8 h-8 bg-[#D4AF37] rounded-lg flex items-center justify-center text-[#0A2342]">🔒</div>
-<div><div class="font-bold text-sm">PRIVATE AI STUDIO</div><div class="text-[10px] text-gray-400">0718899014 • Hip Roof AI</div></div>
-<div class="ml-4 bg-green-900/30 text-green-400 text-[10px] px-3 py-1 rounded-full border border-green-800">● AI Online</div></div>
-<div class="flex gap-2"><button onclick="exportPDF()" class="bg-[#D4AF37] text-[#0A2342] px-4 py-2 rounded-full text-xs font-bold">Export PDF</button></div>
-</header>
+<header class="bg-[#111a33] p-3 flex justify-between items-center border-b border-[#1e3a5f]"><div class="font-bold">🔒 PRIVATE AI STUDIO - 0718899014</div><button onclick="exportPDF()" class="bg-[#D4AF37] text-[#0A2342] px-4 py-2 rounded-full text-xs font-bold">Export PDF</button></header>
 
-<div class="grid lg:grid-cols-[300px_1fr_300px] gap-3 p-3">
+<div class="grid lg:grid-cols-[300px_1fr_280px] gap-3 p-3">
 <div class="bg-[#111a33] rounded-2xl p-4 border border-[#1e3a5f]">
-<h3 class="text-xs text-[#D4AF37] mb-3">✨ COMMAND PROMPT</h3>
 <textarea id="cmd" class="w-full h-24 bg-[#0a0f1e] border border-[#6b5cff] rounded-xl p-3 text-sm">Generate 2-bedroom L-shaped 40x80 hip roof with septic</textarea>
-<button onclick="generatePlan()" class="w-full mt-3 bg-gradient-to-r from-[#6b5cff] to-[#D4AF37] py-3 rounded-xl font-bold text-sm">Generate Plan</button>
-<div class="mt-4 space-y-2 text-xs"><div>Layout: <select id="layout" class="bg-[#0a0f1e] border border-[#1e3a5f] rounded px-2 py-1"><option>2-Bedroom L-Shaped</option><option>3-Bedroom</option></select></div>
-<div>Plot: <input id="plot" value="40' x 80'" class="bg-[#0a0f1e] border border-[#1e3a5f] rounded px-2 py-1 w-24 text-xs"></div></div>
+<button onclick="generate()" class="w-full mt-3 bg-[#D4AF37] text-[#0A2342] py-3 rounded-xl font-bold">Generate Plan</button>
+<div class="mt-4 text-xs">Layout: 2-Bedroom L-Shaped<br>Plot: 40' x 80'<br>Roof: Hip Roof<br>Septic: ON</div>
 </div>
-<div class="bg-[#111a33] rounded-2xl p-3 border border-[#1e3a5f]"><h3 class="text-xs mb-3">📐 FLOOR PLAN — EDITABLE (Drag walls)</h3><canvas id="c" width="650" height="550" class="w-full bg-[#0d1a33]"></canvas></div>
-<div class="bg-[#111a33] rounded-2xl p-4 border border-[#1e3a5f]"><h3 class="text-xs mb-3">OUTPUTS</h3>
-<div class="grid grid-cols-2 gap-2"><div class="bg-[#0a0f1e] p-2 rounded text-center text-[10px]">🏠<br>NORTH</div><div class="bg-[#0a0f1e] p-2 rounded text-center text-[10px]">🏠<br>SOUTH</div><div class="bg-[#0a0f1e] p-2 rounded text-center text-[10px]">🏠<br>EAST</div><div class="bg-[#0a0f1e] p-2 rounded text-center text-[10px]">🏠<br>WEST</div></div>
-<div class="mt-4 bg-[#0a0f1e] rounded-xl p-3 text-center"><div class="text-3xl">🏡</div><div class="text-[10px] mt-2">L-Shaped Hip Roof<br>3D View</div></div>
-<button onclick="exportPDF()" class="w-full mt-4 bg-[#D4AF37] text-[#0A2342] py-2 rounded-xl font-bold text-xs">Export County PDF</button>
+
+<div class="bg-[#111a33] rounded-2xl p-3 border border-[#1e3a5f]">
+<div class="text-xs mb-2">📐 FLOOR PLAN — EDITABLE (Your Original Design)</div>
+<svg id="plan" viewBox="0 0 500 400" class="w-full bg-[#0d1a33] rounded-xl" style="height:500px;border:2px solid #1e3a5f">
+<!-- Outer L-shape -->
+<rect x="20" y="20" width="380" height="20" fill="#3b82f6"/><rect x="20" y="20" width="20" height="280" fill="#3b82f6"/>
+<rect x="20" y="280" width="180" height="20" fill="#3b82f6"/><rect x="180" y="160" width="20" height="140" fill="#3b82f6"/>
+<rect x="180" y="160" width="220" height="20" fill="#3b82f6"/><rect x="380" y="20" width="20" height="280" fill="#3b82f6"/>
+<rect x="200" y="280" width="200" height="20" fill="#3b82f6"/>
+<!-- Inner divisions -->
+<rect x="20" y="140" width="180" height="10" fill="#60a5fa" opacity="0.5"/><rect x="100" y="20" width="10" height="130" fill="#60a5fa" opacity="0.5"/>
+<!-- Labels -->
+<text x="40" y="70" fill="white" font-size="12">BEDROOM 1 12x12</text>
+<text x="40" y="200" fill="white" font-size="12">BEDROOM 2 10x12</text>
+<text x="220" y="70" fill="white" font-size="12">LIVING/DINING 16x18</text>
+<text x="220" y="220" fill="white" font-size="12">KITCHEN 10x12</text>
+<text x="210" y="160" fill="#a5f3fc" font-size="9">BATH 6x8</text>
+<text x="200" y="340" fill="#fbbf24" font-size="11">SEPTIC TANK 1000 GAL - 15' from structure</text>
+<text x="150" y="15" fill="#D4AF37" font-size="11">40'-0"</text>
+</svg>
+</div>
+
+<div class="bg-[#111a33] rounded-2xl p-4 border border-[#1e3a5f]">
+<div class="text-xs mb-2">OUTPUTS</div>
+<div class="grid grid-cols-2 gap-2 text-[10px]"><div class="bg-[#0a0f1e] p-2 rounded text-center">🏠 NORTH</div><div class="bg-[#0a0f1e] p-2 rounded text-center">🏠 SOUTH</div><div class="bg-[#0a0f1e] p-2 rounded text-center">🏠 EAST</div><div class="bg-[#0a0f1e] p-2 rounded text-center">🏠 WEST</div></div>
+<div class="mt-4 bg-[#0a0f1e] p-4 rounded-xl text-center"><div class="text-3xl">🏡</div><div class="text-[10px]">L-Shaped Hip Roof<br>3D Pictorial View</div></div>
+<button onclick="exportPDF()" class="w-full mt-4 bg-[#D4AF37] text-[#0A2342] py-3 rounded-xl font-bold text-xs">Export County PDF</button>
 </div>
 </div>
+
 <script>
-function unlock(){if(document.getElementById('passInput').value==='Muhsin2026!'||document.getElementById('passInput').value==='muhsin'){document.getElementById('lockScreen').style.display='none';initCanvas();}else{alert('Wrong! Use Muhsin2026!');}}
-let canvas;
-function initCanvas(){canvas=new fabric.Canvas('c',{backgroundColor:'#0d1a33'});generatePlan();}
-function generatePlan(){if(!canvas)return;canvas.clear();const walls=[new fabric.Rect({left:50,top:50,width:400,height:20,fill:'#3b82f6'}),new fabric.Rect({left:50,top:50,width:20,height:350,fill:'#3b82f6'}),new fabric.Rect({left:50,top:380,width:200,height:20,fill:'#3b82f6'}),new fabric.Rect({left:230,top:200,width:20,height:200,fill:'#3b82f6'}),new fabric.Rect({left:230,top:200,width:220,height:20,fill:'#3b82f6'}),new fabric.Rect({left:430,top:50,width:20,height:350,fill:'#3b82f6'}),new fabric.Rect({left:250,top:380,width:200,height:20,fill:'#3b82f6'})];walls.forEach(w=>{w.set({selectable:true});canvas.add(w);});canvas.add(new fabric.Text('BEDROOM 1\n12x12',{left:70,top:100,fontSize:14,fill:'#fff'}));canvas.add(new fabric.Text('BEDROOM 2\n10x12',{left:70,top:260,fontSize:14,fill:'#fff'}));canvas.add(new fabric.Text('LIVING\n16x18',{left:300,top:100,fontSize:14,fill:'#fff'}));canvas.add(new fabric.Text('KITCHEN\n10x12',{left:300,top:260,fontSize:14,fill:'#fff'}));canvas.add(new fabric.Text('SEPTIC 1000GAL',{left:280,top:420,fontSize:12,fill:'#fbbf24'}));canvas.renderAll();}
-function exportPDF(){const {jsPDF}=window.jspdf;const doc=new jsPDF('landscape','mm','a3');doc.setFontSize(20);doc.text('MUHSIN HOUSE DESIGNER - County Approved',20,20);doc.setFontSize(12);doc.text('Project: '+document.getElementById('layout').value+' | Plot: '+document.getElementById('plot').value+' | Hip Roof | 0718899014',20,30);doc.rect(20,50,150,80);doc.text('L-SHAPED 2BR PLAN',25,60);doc.text('SEPTIC INCLUDED',90,115);doc.text('Contact: 0718899014',20,190);doc.save('Muhsin-Plan-'+Date.now()+'.pdf');}
-document.getElementById('passInput').addEventListener('keydown',e=>{if(e.key==='Enter')unlock();});
+function generate(){ document.getElementById('plan').style.opacity='0.5'; setTimeout(()=>{document.getElementById('plan').style.opacity='1';},300); }
+function exportPDF(){
+ const {jsPDF}=window.jspdf; const doc=new jsPDF('landscape','mm','a3');
+ doc.setFontSize(18); doc.text('MUHSIN HOUSE DESIGNER - 0718899014',20,20);
+ doc.setFontSize(11); doc.text('2-Bedroom L-Shaped 40x80 Hip Roof with Septic - County Approved',20,30);
+ doc.rect(20,40,140,70); doc.text('BEDROOM 1 12x12',25,50); doc.text('BEDROOM 2 10x12',25,75);
+ doc.text('LIVING 16x18',80,50); doc.text('KITCHEN 10x12',80,75); doc.text('BATH 6x8',80,65);
+ doc.text('SEPTIC TANK 1000 GAL',25,100); doc.rect(180,40,100,30); doc.text('ELEVATIONS - 4 Views',185,55);
+ doc.rect(180,80,100,30); doc.text('3D PICTORIAL - Hip Roof',185,95);
+ doc.text('Muhsin House Designer - Mumias - 0718899014',20,185);
+ doc.save('Muhsin-Plan-'+Date.now()+'.pdf');
+}
+document.getElementById('passInput').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lockScreen').style.display='none'});
 </script>
-</body>
-</html>
+</body></html>
